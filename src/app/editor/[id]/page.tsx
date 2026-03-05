@@ -53,7 +53,10 @@ export default function EditorPage() {
         education: [{ school: "", degree: "", year: "" }],
         skills: [""]
     });
+    const [templateId, setTemplateId] = useState("modern");
     const [title, setTitle] = useState("Untitled Resume");
+    const [showMagicFill, setShowMagicFill] = useState(false);
+    const [magicFillText, setMagicFillText] = useState("");
 
     useEffect(() => {
         const fetchResume = async () => {
@@ -70,6 +73,7 @@ export default function EditorPage() {
 
             if (data) {
                 setTitle(data.title);
+                setTemplateId(data.template_id || "modern");
                 if (Object.keys(data.content).length > 0) {
                     setContent(data.content);
                 }
@@ -84,7 +88,7 @@ export default function EditorPage() {
         setSaving(true);
         const { error } = await supabase
             .from("resumes")
-            .update({ title, content, updated_at: new Date().toISOString() })
+            .update({ title, content, template_id: templateId, updated_at: new Date().toISOString() })
             .eq("id", id);
 
         if (!error) {
@@ -136,6 +140,40 @@ export default function EditorPage() {
         window.print();
     };
 
+    const handleMagicFill = async () => {
+        setSaving(true);
+        setStatus("Magic in progress...");
+
+        try {
+            const res = await fetch('/api/generate', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    prompt: magicFillText,
+                    type: 'extract'
+                })
+            });
+            const data = await res.json();
+
+            if (data.content) {
+                // The AI should return a JSON string that we parse
+                const extracted = JSON.parse(data.content);
+                setContent({
+                    ...content,
+                    ...extracted
+                });
+                setStatus("Magic successful!");
+                setShowMagicFill(false);
+                setMagicFillText("");
+            }
+        } catch (e) {
+            console.error(e);
+            setStatus("Magic failed!");
+        }
+        setSaving(false);
+        setTimeout(() => setStatus(""), 2000);
+    };
+
     if (loading) {
         return (
             <div className="flex h-screen items-center justify-center bg-black">
@@ -176,10 +214,70 @@ export default function EditorPage() {
                             <Download className="w-4 h-4" />
                             <span>Export PDF</span>
                         </button>
+                        <button
+                            onClick={() => setShowMagicFill(true)}
+                            className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 text-white rounded-lg text-sm font-bold hover:opacity-90 transition-all shadow-lg shadow-purple-500/20"
+                        >
+                            <Sparkles className="w-4 h-4" />
+                            <span>Magic Fill</span>
+                        </button>
                     </div>
                 </header>
 
+                {showMagicFill && (
+                    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+                        <div className="bg-zinc-900 border border-white/10 rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl">
+                            <div className="p-6 border-b border-white/5 flex justify-between items-center">
+                                <div className="flex items-center space-x-3">
+                                    <Sparkles className="w-5 h-5 text-purple-400" />
+                                    <h3 className="text-xl font-bold">Magic Fill</h3>
+                                </div>
+                                <button onClick={() => setShowMagicFill(false)} className="text-zinc-500 hover:text-white transition-colors">
+                                    <Plus className="w-6 h-6 rotate-45" />
+                                </button>
+                            </div>
+                            <div className="p-6 space-y-4">
+                                <p className="text-sm text-zinc-400">Paste your LinkedIn profile text, an old resume, or a short bio. We'll extract the information and fill your resume automatically.</p>
+                                <textarea
+                                    value={magicFillText}
+                                    onChange={(e) => setMagicFillText(e.target.value)}
+                                    placeholder="e.g. I am a software engineer with 5 years of experience at Google and Amazon. I graduated from Stanford with a degree in CS..."
+                                    rows={8}
+                                    className="w-full bg-black/50 border border-white/5 rounded-xl p-4 text-sm text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
+                                />
+                                <button
+                                    onClick={handleMagicFill}
+                                    disabled={!magicFillText || saving}
+                                    className="w-full py-4 bg-purple-500 text-white rounded-xl font-bold hover:bg-purple-600 transition-all flex items-center justify-center space-x-2 disabled:opacity-50"
+                                >
+                                    {saving ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
+                                    <span>Extract & Fill Resume</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 <div className="flex-1 overflow-y-auto p-8 space-y-12">
+                    {/* Template Switcher */}
+                    <section className="space-y-4">
+                        <div className="flex items-center space-x-2 text-zinc-400">
+                            <Eye className="w-5 h-5" />
+                            <h2 className="text-lg font-bold">Choose Template</h2>
+                        </div>
+                        <div className="flex gap-4">
+                            {["modern", "classic", "minimal"].map((t) => (
+                                <button
+                                    key={t}
+                                    onClick={() => setTemplateId(t)}
+                                    className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-widest border transition-all ${templateId === t ? 'bg-purple-500 border-purple-500 text-white' : 'bg-zinc-900 border-white/5 text-zinc-500 hover:border-white/20'}`}
+                                >
+                                    {t}
+                                </button>
+                            ))}
+                        </div>
+                    </section>
+
                     {/* Personal Info */}
                     <section className="space-y-6">
                         <div className="flex items-center space-x-2 text-purple-400">
@@ -348,36 +446,55 @@ export default function EditorPage() {
             </div>
 
             {/* Preview Panel */}
-            <div className="w-1/2 bg-zinc-900 p-12 overflow-y-auto flex justify-center print:bg-white print:p-0 print:w-full print:overflow-visible">
-                <div className="w-full max-w-[21cm] h-fit bg-white text-black p-[2.5cm] shadow-2xl origin-top transition-transform print:shadow-none print:max-w-none print:w-full">
-                    <div className="space-y-6">
-                        <header className="border-b-2 border-zinc-200 pb-6">
-                            <h1 className="text-4xl font-extrabold uppercase tracking-tight">{content.personalInfo?.fullName || "Your Name"}</h1>
-                            <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-zinc-600 mt-2 font-medium">
+            <div className={`w-1/2 bg-zinc-900 p-12 overflow-y-auto flex justify-center print:bg-white print:p-0 print:w-full print:overflow-visible ${templateId === 'classic' ? 'font-serif' : 'font-sans'}`}>
+                <div className={`w-full max-w-[21cm] h-fit bg-white text-black p-[2.5cm] shadow-2xl origin-top transition-all print:shadow-none print:max-w-none print:w-full ${templateId === 'minimal' ? 'p-[1.5cm]' : ''}`}>
+                    <div className="space-y-8">
+                        {/* Template-specific Header Rendering */}
+                        <header className={`${templateId === 'classic' ? 'text-center border-b-[3px] border-black pb-8' : 'border-b-2 border-zinc-200 pb-6'} ${templateId === 'minimal' ? 'border-none pb-0 text-left' : ''}`}>
+                            <h1 className={`${templateId === 'classic' ? 'text-5xl font-bold uppercase tracking-[4px]' : 'text-4xl font-extrabold uppercase tracking-tight'} ${templateId === 'minimal' ? 'text-3xl font-medium tracking-normal normal-case border-b border-zinc-100 pb-4' : ''}`}>
+                                {content.personalInfo?.fullName || "Your Name"}
+                            </h1>
+                            <div className={`flex flex-wrap gap-x-4 gap-y-1 text-sm text-zinc-600 mt-4 font-medium ${templateId === 'classic' ? 'justify-center uppercase tracking-widest text-[10px]' : ''} ${templateId === 'minimal' ? 'mt-3 text-zinc-400 font-light' : ''}`}>
                                 <span>{content.personalInfo?.email}</span>
-                                <span>•</span>
-                                <span>{content.personalInfo?.phone}</span>
-                                <span>•</span>
-                                <span>{content.personalInfo?.location}</span>
+                                {content.personalInfo?.phone && (
+                                    <>
+                                        <span className={templateId === 'minimal' ? 'hidden' : ''}>•</span>
+                                        <span>{content.personalInfo?.phone}</span>
+                                    </>
+                                )}
+                                {content.personalInfo?.location && (
+                                    <>
+                                        <span className={templateId === 'minimal' ? 'hidden' : ''}>•</span>
+                                        <span>{content.personalInfo?.location}</span>
+                                    </>
+                                )}
                             </div>
                         </header>
 
-                        <section>
-                            <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-400 mb-3 italic">Professional Summary</h2>
-                            <p className="text-sm leading-relaxed text-zinc-800">{content.personalInfo?.summary}</p>
+                        <section className={templateId === 'minimal' ? 'pt-4 border-t border-zinc-50' : ''}>
+                            <h2 className={`text-sm font-bold uppercase tracking-widest text-zinc-400 mb-4 italic ${templateId === 'minimal' ? 'not-italic font-medium text-zinc-300 mb-2 lowercase' : ''}`}>
+                                Professional Summary
+                            </h2>
+                            <p className={`text-sm leading-relaxed text-zinc-800 ${templateId === 'classic' ? 'text-justify' : ''} ${templateId === 'minimal' ? 'text-zinc-600 font-light' : ''}`}>
+                                {content.personalInfo?.summary}
+                            </p>
                         </section>
 
                         <section>
-                            <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-400 mb-3 italic">Experience</h2>
-                            <div className="space-y-6">
+                            <h2 className={`text-sm font-bold uppercase tracking-widest text-zinc-400 mb-4 italic ${templateId === 'minimal' ? 'not-italic font-medium text-zinc-300 mb-2 lowercase' : ''}`}>
+                                Experience
+                            </h2>
+                            <div className="space-y-8">
                                 {content.experience?.map((exp, i) => (
-                                    <div key={i}>
+                                    <div key={i} className={templateId === 'minimal' ? 'pb-4' : ''}>
                                         <div className="flex justify-between items-baseline mb-1">
-                                            <h3 className="font-bold text-base">{exp.role}</h3>
-                                            <span className="text-sm text-zinc-500 whitespace-nowrap">{exp.duration}</span>
+                                            <h3 className={`font-bold text-base ${templateId === 'minimal' ? 'text-sm font-medium' : ''}`}>{exp.role}</h3>
+                                            <span className={`text-sm text-zinc-500 whitespace-nowrap ${templateId === 'minimal' ? 'text-xs font-light' : ''}`}>{exp.duration}</span>
                                         </div>
-                                        <p className="text-sm font-bold text-zinc-600 mb-2">{exp.company}</p>
-                                        <div className="text-sm text-zinc-800 leading-relaxed whitespace-pre-wrap">
+                                        <p className={`text-sm font-bold text-zinc-600 mb-3 ${templateId === 'minimal' ? 'text-xs font-medium text-zinc-400 tracking-wide uppercase' : ''}`}>
+                                            {exp.company}
+                                        </p>
+                                        <div className={`text-sm text-zinc-800 leading-relaxed whitespace-pre-wrap ${templateId === 'minimal' ? 'text-zinc-600 font-light' : ''}`}>
                                             {exp.description}
                                         </div>
                                     </div>
@@ -387,15 +504,17 @@ export default function EditorPage() {
 
                         {content.education && content.education.length > 0 && (
                             <section>
-                                <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-400 mb-3 italic">Education</h2>
+                                <h2 className={`text-sm font-bold uppercase tracking-widest text-zinc-400 mb-4 italic ${templateId === 'minimal' ? 'not-italic font-medium text-zinc-300 mb-2 lowercase' : ''}`}>
+                                    Education
+                                </h2>
                                 <div className="space-y-4">
                                     {content.education.map((edu, i) => (
                                         <div key={i} className="flex justify-between items-baseline">
                                             <div>
-                                                <h3 className="font-bold text-sm">{edu.school}</h3>
-                                                <p className="text-sm text-zinc-600 font-medium">{edu.degree}</p>
+                                                <h3 className={`font-bold text-sm ${templateId === 'minimal' ? 'font-medium' : ''}`}>{edu.school}</h3>
+                                                <p className={`text-sm text-zinc-600 font-medium ${templateId === 'minimal' ? 'text-xs font-light text-zinc-400' : ''}`}>{edu.degree}</p>
                                             </div>
-                                            <span className="text-sm text-zinc-500 whitespace-nowrap">{edu.year}</span>
+                                            <span className={`text-sm text-zinc-500 whitespace-nowrap ${templateId === 'minimal' ? 'text-xs font-light' : ''}`}>{edu.year}</span>
                                         </div>
                                     ))}
                                 </div>
@@ -404,10 +523,12 @@ export default function EditorPage() {
 
                         {content.skills && content.skills.length > 0 && (
                             <section>
-                                <h2 className="text-sm font-bold uppercase tracking-widest text-zinc-400 mb-3 italic">Skills</h2>
-                                <div className="flex flex-wrap gap-2">
+                                <h2 className={`text-sm font-bold uppercase tracking-widest text-zinc-400 mb-4 italic ${templateId === 'minimal' ? 'not-italic font-medium text-zinc-300 mb-2 lowercase' : ''}`}>
+                                    Skills
+                                </h2>
+                                <div className={`flex flex-wrap gap-2 ${templateId === 'classic' ? 'justify-center' : ''}`}>
                                     {content.skills.map((skill, i) => skill && (
-                                        <span key={i} className="px-2 py-1 bg-zinc-100 text-zinc-700 text-xs font-bold rounded">
+                                        <span key={i} className={`px-2 py-1 text-xs font-bold rounded ${templateId === 'modern' ? 'bg-zinc-100 text-zinc-700' : ''} ${templateId === 'classic' ? 'border border-zinc-200 text-zinc-800 rounded-none' : ''} ${templateId === 'minimal' ? 'text-zinc-500 font-light p-0 pr-3 after:content-[","] last:after:content-[""]' : ''}`}>
                                             {skill}
                                         </span>
                                     ))}

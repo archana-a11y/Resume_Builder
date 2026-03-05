@@ -21,6 +21,8 @@ export async function POST(req: Request) {
             systemPrompt += " Enhance the following job experience entry. Use strong action verbs, quantify achievements where possible, and ensure it sounds professional and results-oriented. Provide 3-4 bullet points.";
         } else if (type === 'full') {
             systemPrompt += " Generate a complete resume structure based on the provided details. Output in JSON format with sections: summary, experience (array of objects), skills (array), and education (array).";
+        } else if (type === 'extract') {
+            systemPrompt += " Extract resume information from the provided text. Output ONLY a raw JSON object (no markdown formatting, no code blocks) with the following structure: { \"personalInfo\": { \"fullName\": \"\", \"email\": \"\", \"phone\": \"\", \"location\": \"\", \"summary\": \"\" }, \"experience\": [{ \"company\": \"\", \"role\": \"\", \"duration\": \"\", \"description\": \"\" }], \"education\": [{ \"school\": \"\", \"degree\": \"\", \"year\": \"\" }], \"skills\": [\"\"] }. Ensure the description for experience is a bulleted list.";
         }
 
         const response = await openai.chat.completions.create({
