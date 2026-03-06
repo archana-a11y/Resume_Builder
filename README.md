@@ -4,10 +4,24 @@ A modern, AI-powered resume builder built with Next.js, Supabase, and OpenAI.
 
 ## Features
 
-- **AI Generation**: Generate resume content using OpenAI.
-- **Real-time Preview**: See your changes instantly with multiple premium templates.
-- **PDF Export**: Download your resume as a professionally formatted PDF.
-- **Supabase Integration**: Secure authentication and data storage.
+### 💎 Premium Experience
+- **Stunning UI**: Modern glassmorphism design with `framer-motion` animations and high-end aesthetic.
+- **Dynamic Dashboard**: Manage your entire job hunt from a single, beautiful interface.
+
+### 🤖 AI-Powered Suite
+- **AI Resume Builder**: Generate professional content instantly using OpenAI.
+- **AI Cover Letter Generator**: Craft tailored cover letters for specific job descriptions based on your resume.
+- **ATS Match Engine**: Scan your resume against job postings to get a match score and optimization tips.
+- **AI Interview Coach**: Practice with behavioral and technical questions + STAR method answer coaching.
+
+### 🏹 Job Hunt Management
+- **Job Tracker (CRM)**: A Kanban-style board to track applications from 'Wishlist' to 'Offer'.
+- **Integrated Workflow**: Link specific resumes and letters to each application for perfect organization.
+
+### 🛠️ Technical Excellence
+- **Supabase Core**: Secure Auth and real-time database integration.
+- **Next.js 15+**: Built with the latest server actions and App Router patterns.
+- **Professional PDF Export**: High-quality resume downloads at the click of a button.
 
 ## Setup
 

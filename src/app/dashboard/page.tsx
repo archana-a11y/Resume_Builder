@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Plus, FileText, Trash2, Edit3, LogOut, Loader2, User, LayoutDashboard, Sparkles } from "lucide-react";
+import { Plus, FileText, Trash2, Edit3, LogOut, Loader2, User, LayoutDashboard, Sparkles, Share2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import TrackerBoard from "@/components/TrackerBoard";
 
@@ -12,6 +12,7 @@ interface Resume {
     id: string;
     title: string;
     updated_at: string;
+    is_public: boolean;
 }
 
 export default function DashboardPage() {
@@ -33,7 +34,7 @@ export default function DashboardPage() {
 
             const { data, error } = await supabase
                 .from("resumes")
-                .select("id, title, updated_at")
+                .select("id, title, updated_at, is_public")
                 .order("updated_at", { ascending: false });
 
             if (!error) {
@@ -203,6 +204,30 @@ export default function DashboardPage() {
                                                 <Sparkles className="w-4 h-4 group-hover/link:rotate-12 transition-transform" />
                                                 <span>Letter</span>
                                             </Link>
+                                            <button
+                                                onClick={async () => {
+                                                    const { data, error } = await supabase
+                                                        .from("resumes")
+                                                        .update({ is_public: !resume.is_public })
+                                                        .eq("id", resume.id)
+                                                        .select()
+                                                        .single();
+
+                                                    if (!error) {
+                                                        const updatedResumes = resumes.map(r => r.id === resume.id ? { ...r, is_public: data.is_public } : r);
+                                                        setResumes(updatedResumes);
+                                                        if (data.is_public) {
+                                                            const url = `${window.location.origin}/share/${resume.id}`;
+                                                            navigator.clipboard.writeText(url);
+                                                            alert("Link copied to clipboard!");
+                                                        }
+                                                    }
+                                                }}
+                                                className={`flex items-center space-x-2 text-xs font-black uppercase tracking-widest transition-all group/link ${resume.is_public ? 'text-emerald-400 hover:text-emerald-300' : 'text-zinc-600 hover:text-white'}`}
+                                            >
+                                                <Share2 className="w-4 h-4 group-hover/link:scale-110 transition-transform" />
+                                                <span>{resume.is_public ? 'Shared' : 'Share'}</span>
+                                            </button>
                                         </div>
                                         <button
                                             onClick={() => handleDeleteResume(resume.id)}
