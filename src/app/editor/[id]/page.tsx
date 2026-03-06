@@ -15,9 +15,13 @@ import {
     User,
     Briefcase,
     GraduationCap,
-    Code
+    Code,
+    Shield,
+    Layout,
+    Zap
 } from "lucide-react";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface ResumeContent {
     personalInfo?: {
@@ -57,6 +61,10 @@ export default function EditorPage() {
     const [title, setTitle] = useState("Untitled Resume");
     const [showMagicFill, setShowMagicFill] = useState(false);
     const [magicFillText, setMagicFillText] = useState("");
+    const [showScanner, setShowScanner] = useState(false);
+    const [analyzing, setAnalyzing] = useState(false);
+    const [jobDesc, setJobDesc] = useState("");
+    const [analysis, setAnalysis] = useState<any>(null);
 
     useEffect(() => {
         const fetchResume = async () => {
@@ -140,6 +148,26 @@ export default function EditorPage() {
         window.print();
     };
 
+    const handleAnalyzeATS = async () => {
+        if (!jobDesc) return;
+        setAnalyzing(true);
+        try {
+            const res = await fetch('/api/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    resumeContent: content,
+                    jobDescription: jobDesc
+                })
+            });
+            const data = await res.json();
+            setAnalysis(data);
+        } catch (e) {
+            console.error(e);
+        }
+        setAnalyzing(false);
+    };
+
     const handleMagicFill = async () => {
         setSaving(true);
         setStatus("Magic in progress...");
@@ -221,8 +249,137 @@ export default function EditorPage() {
                             <Sparkles className="w-4 h-4" />
                             <span>Magic Fill</span>
                         </button>
+                        <button
+                            onClick={() => setShowScanner(true)}
+                            className="flex items-center space-x-2 px-4 py-2 bg-zinc-900 border border-white/10 text-white rounded-lg text-sm font-bold hover:bg-zinc-800 transition-all"
+                        >
+                            <Layout className="w-4 h-4 text-emerald-400" />
+                            <span>ATS Scanner</span>
+                        </button>
                     </div>
                 </header>
+
+                {/* ATS Scanner Modal */}
+                <AnimatePresence>
+                    {showScanner && (
+                        <div className="fixed inset-0 bg-black/90 backdrop-blur-md z-[60] flex items-center justify-center p-4">
+                            <motion.div
+                                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                                animate={{ opacity: 1, scale: 1, y: 0 }}
+                                exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                                className="bg-zinc-900 border border-white/10 rounded-[32px] w-full max-w-4xl max-h-[90vh] overflow-hidden shadow-2xl flex flex-col"
+                            >
+                                <div className="p-8 border-b border-white/5 flex justify-between items-center bg-zinc-900/50 backdrop-blur-xl">
+                                    <div className="flex items-center space-x-4">
+                                        <div className="p-3 bg-emerald-500/20 rounded-2xl">
+                                            <Shield className="w-6 h-6 text-emerald-400" />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-2xl font-black uppercase tracking-tight">ATS Optimization Scanner</h3>
+                                            <p className="text-zinc-500 text-sm">Analyze your match rate and beat the screening bots.</p>
+                                        </div>
+                                    </div>
+                                    <button onClick={() => setShowScanner(false)} className="p-2 hover:bg-white/5 rounded-full transition-colors">
+                                        <Plus className="w-8 h-8 rotate-45 text-zinc-500" />
+                                    </button>
+                                </div>
+
+                                <div className="flex-1 overflow-y-auto p-8 flex flex-col md:flex-row gap-8">
+                                    {/* Left: Input */}
+                                    <div className="w-full md:w-1/2 space-y-6">
+                                        <div className="space-y-4">
+                                            <label className="text-xs font-black uppercase tracking-widest text-zinc-500 flex items-center gap-2">
+                                                <Briefcase className="w-4 h-4" /> Target Job Description
+                                            </label>
+                                            <textarea
+                                                value={jobDesc}
+                                                onChange={(e) => setJobDesc(e.target.value)}
+                                                placeholder="Paste the job requirements here to find missing keywords and optimize your score..."
+                                                rows={12}
+                                                className="w-full bg-black/50 border border-white/10 rounded-2xl p-6 text-sm text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all resize-none font-medium"
+                                            />
+                                        </div>
+                                        <button
+                                            onClick={handleAnalyzeATS}
+                                            disabled={!jobDesc || analyzing}
+                                            className="w-full py-5 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-2xl font-black uppercase tracking-widest text-sm hover:opacity-90 transition-all shadow-xl shadow-emerald-500/20 flex items-center justify-center space-x-3 disabled:opacity-50"
+                                        >
+                                            {analyzing ? <Loader2 className="w-5 h-5 animate-spin" /> : <Zap className="w-5 h-5" />}
+                                            <span>Scan Resume Match</span>
+                                        </button>
+                                    </div>
+
+                                    {/* Right: Results */}
+                                    <div className="w-full md:w-1/2 space-y-8 bg-black/20 rounded-3xl p-6 border border-white/5">
+                                        {!analysis ? (
+                                            <div className="h-full flex flex-col items-center justify-center text-center space-y-4 py-20">
+                                                <Sparkles className="w-12 h-12 text-zinc-800" />
+                                                <p className="text-zinc-500 text-sm max-w-[200px]">Paste a job description and run the scan to see your result.</p>
+                                            </div>
+                                        ) : (
+                                            <motion.div
+                                                initial={{ opacity: 0 }}
+                                                animate={{ opacity: 1 }}
+                                                className="space-y-8"
+                                            >
+                                                {/* Score Circle */}
+                                                <div className="flex items-center justify-between">
+                                                    <div className="relative w-32 h-32 flex items-center justify-center">
+                                                        <svg className="w-full h-full -rotate-90">
+                                                            <circle cx="64" cy="64" r="58" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-white/5" />
+                                                            <circle cx="64" cy="64" r="58" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray={364} strokeDashoffset={364 - (364 * analysis.score) / 100} className={`${analysis.score > 70 ? 'text-emerald-500' : analysis.score > 40 ? 'text-yellow-500' : 'text-red-500'} transition-all duration-1000`} />
+                                                        </svg>
+                                                        <span className="absolute text-3xl font-black">{analysis.score}%</span>
+                                                    </div>
+                                                    <div className="flex-1 ml-8">
+                                                        <h4 className="text-lg font-bold mb-1">Match Rating</h4>
+                                                        <p className="text-zinc-500 text-xs leading-relaxed">{analysis.matchAnalysis}</p>
+                                                    </div>
+                                                </div>
+
+                                                {/* Keywords */}
+                                                <div className="space-y-3">
+                                                    <h4 className="text-xs font-black uppercase tracking-widest text-emerald-400">Missing Keywords</h4>
+                                                    <div className="flex flex-wrap gap-2">
+                                                        {analysis.missingKeywords.map((kw: string, i: number) => (
+                                                            <span key={i} className="px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-lg text-xs font-bold leading-none">+ {kw}</span>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
+                                                {/* Fixes */}
+                                                <div className="space-y-3">
+                                                    <h4 className="text-xs font-black uppercase tracking-widest text-red-400">Critical Fixes</h4>
+                                                    <div className="space-y-2">
+                                                        {analysis.criticalFixes.map((fix: string, i: number) => (
+                                                            <div key={i} className="flex items-start space-x-2 text-xs text-zinc-300">
+                                                                <div className="w-1.5 h-1.5 bg-red-500 rounded-full mt-1 shrink-0" />
+                                                                <span>{fix}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+
+                                                {/* Suggestions */}
+                                                <div className="space-y-3">
+                                                    <h4 className="text-xs font-black uppercase tracking-widest text-purple-400">AI Advice</h4>
+                                                    <div className="space-y-2">
+                                                        {analysis.optimizationSuggestions.map((sug: string, i: number) => (
+                                                            <div key={i} className="flex items-start space-x-2 text-xs text-zinc-300">
+                                                                <div className="w-1.5 h-1.5 bg-purple-500 rounded-full mt-1 shrink-0" />
+                                                                <span>{sug}</span>
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        )}
+                                    </div>
+                                </div>
+                            </motion.div>
+                        </div>
+                    )}
+                </AnimatePresence>
 
                 {showMagicFill && (
                     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
