@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Plus, FileText, Trash2, Edit3, LogOut, Loader2, User, LayoutDashboard, Sparkles, Share2 } from "lucide-react";
+import { Plus, FileText, Trash2, Edit3, LogOut, Loader2, User, LayoutDashboard, Sparkles, Share2, Eye } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import TrackerBoard from "@/components/TrackerBoard";
 
@@ -13,6 +13,7 @@ interface Resume {
     title: string;
     updated_at: string;
     is_public: boolean;
+    views: number;
 }
 
 export default function DashboardPage() {
@@ -34,7 +35,7 @@ export default function DashboardPage() {
 
             const { data, error } = await supabase
                 .from("resumes")
-                .select("id, title, updated_at, is_public")
+                .select("id, title, updated_at, is_public, views")
                 .order("updated_at", { ascending: false });
 
             if (!error) {
@@ -180,11 +181,19 @@ export default function DashboardPage() {
                                         <h3 className="text-xl font-black truncate group-hover:text-white transition-colors leading-tight">
                                             {resume.title}
                                         </h3>
-                                        <div className="flex items-center space-x-2 mt-2">
-                                            <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse" />
-                                            <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">
-                                                Last active {new Date(resume.updated_at).toLocaleDateString()}
-                                            </p>
+                                        <div className="flex items-center justify-between mt-2">
+                                            <div className="flex items-center space-x-2">
+                                                <div className={`w-1.5 h-1.5 rounded-full ${resume.is_public ? 'bg-emerald-500 shadow-[0_0_10px_rgba(16,185,129,0.5)]' : 'bg-zinc-700'}`} />
+                                                <p className="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">
+                                                    {resume.is_public ? 'Public' : 'Private'} • {new Date(resume.updated_at).toLocaleDateString()}
+                                                </p>
+                                            </div>
+                                            {resume.is_public && (
+                                                <div className="flex items-center space-x-1 px-2 py-0.5 bg-white/5 rounded-full border border-white/5">
+                                                    <Eye className="w-2.5 h-2.5 text-zinc-400" />
+                                                    <span className="text-[9px] font-bold text-zinc-300">{resume.views || 0}</span>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
 

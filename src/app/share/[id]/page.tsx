@@ -12,7 +12,25 @@ export default function PublicResumePage() {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchPublicResume = async () => {
+        const fetchAndTrack = async () => {
+            // Track view
+            if (id) {
+                // We use a direct update for simplicity, but an RPC incrementing by 1 is safer.
+                // Since this is a simple tracker, we'll fetch first then increment.
+                const { data: current } = await supabase
+                    .from("resumes")
+                    .select("views")
+                    .eq("id", id)
+                    .single();
+
+                if (current) {
+                    await supabase
+                        .from("resumes")
+                        .update({ views: (current.views || 0) + 1 })
+                        .eq("id", id);
+                }
+            }
+
             const { data, error } = await supabase
                 .from("resumes")
                 .select("*")
@@ -26,7 +44,7 @@ export default function PublicResumePage() {
             setLoading(false);
         };
 
-        fetchPublicResume();
+        fetchAndTrack();
     }, [id]);
 
     if (loading) {
