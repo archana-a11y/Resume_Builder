@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import {
     Plus,
@@ -12,7 +13,8 @@ import {
     CheckCircle2,
     XCircle,
     Building2,
-    Briefcase
+    Briefcase,
+    Sparkles
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -134,9 +136,20 @@ export default function TrackerBoard() {
                                                         <Building2 className="w-3 h-3" />
                                                         <span className="text-[10px] font-bold uppercase tracking-widest truncate">{app.company_name}</span>
                                                     </div>
-                                                    <button onClick={() => deleteApp(app.id)} className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-400 transition-all">
-                                                        <Trash2 className="w-3 h-3" />
-                                                    </button>
+                                                    <div className="flex items-center space-x-2">
+                                                        <button onClick={() => deleteApp(app.id)} className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-400 transition-all">
+                                                            <Trash2 className="w-3 h-3" />
+                                                        </button>
+                                                        {app.status === 'Interview' && (
+                                                            <Link
+                                                                href={`/interview/${app.id}`}
+                                                                className="p-1 px-2 bg-emerald-500/10 text-emerald-400 rounded-lg text-[8px] font-black uppercase tracking-widest hover:bg-emerald-500 hover:text-white transition-all flex items-center space-x-1"
+                                                            >
+                                                                <Sparkles className="w-2 h-2" />
+                                                                <span>Prep</span>
+                                                            </Link>
+                                                        )}
+                                                    </div>
                                                 </div>
                                                 <h4 className="font-bold text-sm truncate">{app.role_title}</h4>
                                             </div>
