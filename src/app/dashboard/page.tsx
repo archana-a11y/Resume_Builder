@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { Plus, FileText, Trash2, Edit3, LogOut, Loader2, User, LayoutDashboard } from "lucide-react";
+import { Plus, FileText, Trash2, Edit3, LogOut, Loader2, User, LayoutDashboard, Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface Resume {
@@ -162,13 +162,22 @@ export default function DashboardPage() {
                                 </div>
 
                                 <div className="flex justify-between items-center pt-6 border-t border-white/5">
-                                    <Link
-                                        href={`/editor/${resume.id}`}
-                                        className="flex items-center space-x-2 text-xs font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-all group/link"
-                                    >
-                                        <Edit3 className="w-4 h-4 group-hover/link:rotate-12 transition-transform" />
-                                        <span>Edit Resume</span>
-                                    </Link>
+                                    <div className="flex items-center space-x-4">
+                                        <Link
+                                            href={`/editor/${resume.id}`}
+                                            className="flex items-center space-x-2 text-xs font-black uppercase tracking-widest text-zinc-400 hover:text-white transition-all group/link"
+                                        >
+                                            <Edit3 className="w-4 h-4 group-hover/link:rotate-12 transition-transform" />
+                                            <span>Edit</span>
+                                        </Link>
+                                        <Link
+                                            href={`/cover-letter/${resume.id}`}
+                                            className="flex items-center space-x-2 text-xs font-black uppercase tracking-widest text-purple-400 hover:text-purple-300 transition-all group/link"
+                                        >
+                                            <Sparkles className="w-4 h-4 group-hover/link:rotate-12 transition-transform" />
+                                            <span>Letter</span>
+                                        </Link>
+                                    </div>
                                     <button
                                         onClick={() => handleDeleteResume(resume.id)}
                                         className="p-3 text-zinc-600 hover:text-red-400 hover:bg-red-400/10 rounded-2xl transition-all"
