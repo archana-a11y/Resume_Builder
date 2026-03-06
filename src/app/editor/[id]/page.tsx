@@ -266,7 +266,7 @@ export default function EditorPage() {
                             <h2 className="text-lg font-bold">Choose Template</h2>
                         </div>
                         <div className="flex gap-4">
-                            {["modern", "classic", "minimal"].map((t) => (
+                            {["modern", "classic", "minimal", "creative"].map((t) => (
                                 <button
                                     key={t}
                                     onClick={() => setTemplateId(t)}
@@ -447,95 +447,167 @@ export default function EditorPage() {
 
             {/* Preview Panel */}
             <div className={`w-1/2 bg-zinc-900 p-12 overflow-y-auto flex justify-center print:bg-white print:p-0 print:w-full print:overflow-visible ${templateId === 'classic' ? 'font-serif' : 'font-sans'}`}>
-                <div className={`w-full max-w-[21cm] h-fit bg-white text-black p-[2.5cm] shadow-2xl origin-top transition-all print:shadow-none print:max-w-none print:w-full ${templateId === 'minimal' ? 'p-[1.5cm]' : ''}`}>
-                    <div className="space-y-8">
-                        {/* Template-specific Header Rendering */}
-                        <header className={`${templateId === 'classic' ? 'text-center border-b-[3px] border-black pb-8' : 'border-b-2 border-zinc-200 pb-6'} ${templateId === 'minimal' ? 'border-none pb-0 text-left' : ''}`}>
-                            <h1 className={`${templateId === 'classic' ? 'text-5xl font-bold uppercase tracking-[4px]' : 'text-4xl font-extrabold uppercase tracking-tight'} ${templateId === 'minimal' ? 'text-3xl font-medium tracking-normal normal-case border-b border-zinc-100 pb-4' : ''}`}>
-                                {content.personalInfo?.fullName || "Your Name"}
-                            </h1>
-                            <div className={`flex flex-wrap gap-x-4 gap-y-1 text-sm text-zinc-600 mt-4 font-medium ${templateId === 'classic' ? 'justify-center uppercase tracking-widest text-[10px]' : ''} ${templateId === 'minimal' ? 'mt-3 text-zinc-400 font-light' : ''}`}>
-                                <span>{content.personalInfo?.email}</span>
-                                {content.personalInfo?.phone && (
-                                    <>
-                                        <span className={templateId === 'minimal' ? 'hidden' : ''}>•</span>
-                                        <span>{content.personalInfo?.phone}</span>
-                                    </>
-                                )}
-                                {content.personalInfo?.location && (
-                                    <>
-                                        <span className={templateId === 'minimal' ? 'hidden' : ''}>•</span>
-                                        <span>{content.personalInfo?.location}</span>
-                                    </>
-                                )}
-                            </div>
-                        </header>
-
-                        <section className={templateId === 'minimal' ? 'pt-4 border-t border-zinc-50' : ''}>
-                            <h2 className={`text-sm font-bold uppercase tracking-widest text-zinc-400 mb-4 italic ${templateId === 'minimal' ? 'not-italic font-medium text-zinc-300 mb-2 lowercase' : ''}`}>
-                                Professional Summary
-                            </h2>
-                            <p className={`text-sm leading-relaxed text-zinc-800 ${templateId === 'classic' ? 'text-justify' : ''} ${templateId === 'minimal' ? 'text-zinc-600 font-light' : ''}`}>
-                                {content.personalInfo?.summary}
-                            </p>
-                        </section>
-
-                        <section>
-                            <h2 className={`text-sm font-bold uppercase tracking-widest text-zinc-400 mb-4 italic ${templateId === 'minimal' ? 'not-italic font-medium text-zinc-300 mb-2 lowercase' : ''}`}>
-                                Experience
-                            </h2>
-                            <div className="space-y-8">
-                                {content.experience?.map((exp, i) => (
-                                    <div key={i} className={templateId === 'minimal' ? 'pb-4' : ''}>
-                                        <div className="flex justify-between items-baseline mb-1">
-                                            <h3 className={`font-bold text-base ${templateId === 'minimal' ? 'text-sm font-medium' : ''}`}>{exp.role}</h3>
-                                            <span className={`text-sm text-zinc-500 whitespace-nowrap ${templateId === 'minimal' ? 'text-xs font-light' : ''}`}>{exp.duration}</span>
-                                        </div>
-                                        <p className={`text-sm font-bold text-zinc-600 mb-3 ${templateId === 'minimal' ? 'text-xs font-medium text-zinc-400 tracking-wide uppercase' : ''}`}>
-                                            {exp.company}
-                                        </p>
-                                        <div className={`text-sm text-zinc-800 leading-relaxed whitespace-pre-wrap ${templateId === 'minimal' ? 'text-zinc-600 font-light' : ''}`}>
-                                            {exp.description}
-                                        </div>
+                <div id="resume-preview" className={`w-full max-w-[21cm] h-fit bg-white text-black shadow-2xl origin-top transition-all print:shadow-none print:max-w-none print:w-full ${templateId === 'creative' ? 'flex' : 'p-[2cm]'} ${templateId === 'minimal' ? 'p-[1.5cm]' : ''}`}>
+                    {templateId === 'creative' ? (
+                        <>
+                            {/* Sidebar Layout for Creative */}
+                            <div className="w-1/3 bg-zinc-100 p-8 space-y-8 h-full min-h-[29.7cm]">
+                                <header className="space-y-4">
+                                    <h1 className="text-3xl font-extrabold text-blue-600 leading-tight uppercase">
+                                        {content.personalInfo?.fullName || "Your Name"}
+                                    </h1>
+                                    <div className="space-y-2 text-xs text-zinc-500 font-medium">
+                                        <p>{content.personalInfo?.email}</p>
+                                        <p>{content.personalInfo?.phone}</p>
+                                        <p>{content.personalInfo?.location}</p>
                                     </div>
-                                ))}
-                            </div>
-                        </section>
+                                </header>
 
-                        {content.education && content.education.length > 0 && (
-                            <section>
-                                <h2 className={`text-sm font-bold uppercase tracking-widest text-zinc-400 mb-4 italic ${templateId === 'minimal' ? 'not-italic font-medium text-zinc-300 mb-2 lowercase' : ''}`}>
-                                    Education
-                                </h2>
-                                <div className="space-y-4">
-                                    {content.education.map((edu, i) => (
-                                        <div key={i} className="flex justify-between items-baseline">
-                                            <div>
-                                                <h3 className={`font-bold text-sm ${templateId === 'minimal' ? 'font-medium' : ''}`}>{edu.school}</h3>
-                                                <p className={`text-sm text-zinc-600 font-medium ${templateId === 'minimal' ? 'text-xs font-light text-zinc-400' : ''}`}>{edu.degree}</p>
+                                <section className="space-y-4">
+                                    <h2 className="text-sm font-bold uppercase tracking-widest text-blue-600 border-b-2 border-blue-600 pb-1">Skills</h2>
+                                    <div className="flex flex-wrap gap-2">
+                                        {content.skills?.map((skill, i) => skill && (
+                                            <span key={i} className="px-2 py-1 bg-white text-zinc-700 text-[10px] font-bold rounded shadow-sm">
+                                                {skill}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </section>
+
+                                <section className="space-y-4">
+                                    <h2 className="text-sm font-bold uppercase tracking-widest text-blue-600 border-b-2 border-blue-600 pb-1">Education</h2>
+                                    <div className="space-y-4">
+                                        {content.education?.map((edu, i) => (
+                                            <div key={i} className="space-y-1">
+                                                <h3 className="font-bold text-xs">{edu.school}</h3>
+                                                <p className="text-[10px] text-zinc-600">{edu.degree}</p>
+                                                <p className="text-[10px] text-zinc-400">{edu.year}</p>
                                             </div>
-                                            <span className={`text-sm text-zinc-500 whitespace-nowrap ${templateId === 'minimal' ? 'text-xs font-light' : ''}`}>{edu.year}</span>
+                                        ))}
+                                    </div>
+                                </section>
+                            </div>
+                            {/* Main Content for Creative */}
+                            <div className="w-2/3 p-10 space-y-8 bg-white">
+                                <section className="space-y-4">
+                                    <h2 className="text-lg font-bold text-zinc-800 flex items-center gap-2">
+                                        <span className="w-2 h-2 bg-blue-600 rounded-full" /> Summary
+                                    </h2>
+                                    <p className="text-sm text-zinc-600 leading-relaxed italic">
+                                        {content.personalInfo?.summary}
+                                    </p>
+                                </section>
+                                <section className="space-y-6">
+                                    <h2 className="text-lg font-bold text-zinc-800 flex items-center gap-2">
+                                        <span className="w-2 h-2 bg-blue-600 rounded-full" /> Experience
+                                    </h2>
+                                    <div className="space-y-8">
+                                        {content.experience?.map((exp, i) => (
+                                            <div key={i} className="relative pl-6 before:absolute before:left-0 before:top-2 before:bottom-0 before:w-0.5 before:bg-zinc-100">
+                                                <div className="flex justify-between items-baseline mb-1">
+                                                    <h3 className="font-bold text-base text-zinc-900">{exp.role}</h3>
+                                                    <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded-full uppercase tracking-tighter">{exp.duration}</span>
+                                                </div>
+                                                <p className="text-sm font-medium text-zinc-400 mb-2 uppercase tracking-wide">{exp.company}</p>
+                                                <div className="text-sm text-zinc-600 leading-relaxed whitespace-pre-wrap">
+                                                    {exp.description}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </section>
+                            </div>
+                        </>
+                    ) : (
+                        <div className="space-y-8">
+                            {/* Standard Layout Rendering */}
+                            <header className={`${templateId === 'classic' ? 'text-center border-b-[3px] border-black pb-8' : 'border-b-4 border-indigo-600 pb-6'} ${templateId === 'minimal' ? 'border-none pb-0 text-left' : ''} ${templateId === 'modern' ? 'bg-zinc-50 -mx-8 -mt-8 p-12 mb-8' : ''}`}>
+                                <h1 className={`${templateId === 'classic' ? 'text-5xl font-bold uppercase tracking-[4px]' : 'text-4xl font-black uppercase tracking-tight'} ${templateId === 'minimal' ? 'text-3xl font-medium tracking-normal normal-case border-b border-zinc-100 pb-4' : ''} ${templateId === 'modern' ? 'text-indigo-600 mb-2' : ''}`}>
+                                    {content.personalInfo?.fullName || "Your Name"}
+                                </h1>
+                                <div className={`flex flex-wrap gap-x-4 gap-y-1 text-sm text-zinc-500 mt-4 font-medium ${templateId === 'classic' ? 'justify-center uppercase tracking-widest text-[10px]' : ''} ${templateId === 'minimal' ? 'mt-3 text-zinc-400 font-light' : ''}`}>
+                                    <span className="hover:text-black transition-colors">{content.personalInfo?.email}</span>
+                                    {content.personalInfo?.phone && (
+                                        <>
+                                            <span className={templateId === 'minimal' ? 'hidden' : 'text-zinc-300'}>•</span>
+                                            <span>{content.personalInfo?.phone}</span>
+                                        </>
+                                    )}
+                                    {content.personalInfo?.location && (
+                                        <>
+                                            <span className={templateId === 'minimal' ? 'hidden' : 'text-zinc-300'}>•</span>
+                                            <span>{content.personalInfo?.location}</span>
+                                        </>
+                                    )}
+                                </div>
+                            </header>
+
+                            <section className={templateId === 'minimal' ? 'pt-4 border-t border-zinc-50' : ''}>
+                                <h2 className={`text-sm font-bold uppercase tracking-widest mb-4 ${templateId === 'modern' ? 'text-indigo-600' : 'text-zinc-400'} ${templateId === 'classic' ? 'italic' : ''} ${templateId === 'minimal' ? 'not-italic font-medium text-zinc-300 mb-2 lowercase' : ''}`}>
+                                    Professional Summary
+                                </h2>
+                                <p className={`text-sm leading-relaxed text-zinc-800 ${templateId === 'classic' ? 'text-justify' : ''} ${templateId === 'minimal' ? 'text-zinc-600 font-light' : ''} ${templateId === 'modern' ? 'border-l-4 border-indigo-100 pl-4 py-1' : ''}`}>
+                                    {content.personalInfo?.summary}
+                                </p>
+                            </section>
+
+                            <section>
+                                <h2 className={`text-sm font-bold uppercase tracking-widest mb-4 ${templateId === 'modern' ? 'text-indigo-600' : 'text-zinc-400'} ${templateId === 'classic' ? 'italic' : ''} ${templateId === 'minimal' ? 'not-italic font-medium text-zinc-300 mb-2 lowercase' : ''}`}>
+                                    Experience
+                                </h2>
+                                <div className="space-y-8">
+                                    {content.experience?.map((exp, i) => (
+                                        <div key={i} className={templateId === 'minimal' ? 'pb-4' : ''}>
+                                            <div className="flex justify-between items-baseline mb-1">
+                                                <h3 className={`font-bold text-base ${templateId === 'minimal' ? 'text-sm font-medium' : ''} ${templateId === 'modern' ? 'text-zinc-900' : ''}`}>{exp.role}</h3>
+                                                <span className={`text-sm text-zinc-500 whitespace-nowrap font-bold ${templateId === 'minimal' ? 'text-xs font-light' : ''} ${templateId === 'modern' ? 'text-indigo-600' : ''}`}>{exp.duration}</span>
+                                            </div>
+                                            <p className={`text-sm font-bold text-zinc-600 mb-3 ${templateId === 'minimal' ? 'text-xs font-medium text-zinc-400 tracking-wide uppercase' : ''} ${templateId === 'modern' ? 'italic opacity-70' : ''}`}>
+                                                {exp.company}
+                                            </p>
+                                            <div className={`text-sm text-zinc-800 leading-relaxed whitespace-pre-wrap ${templateId === 'minimal' ? 'text-zinc-600 font-light' : ''}`}>
+                                                {exp.description}
+                                            </div>
                                         </div>
                                     ))}
                                 </div>
                             </section>
-                        )}
 
-                        {content.skills && content.skills.length > 0 && (
-                            <section>
-                                <h2 className={`text-sm font-bold uppercase tracking-widest text-zinc-400 mb-4 italic ${templateId === 'minimal' ? 'not-italic font-medium text-zinc-300 mb-2 lowercase' : ''}`}>
-                                    Skills
-                                </h2>
-                                <div className={`flex flex-wrap gap-2 ${templateId === 'classic' ? 'justify-center' : ''}`}>
-                                    {content.skills.map((skill, i) => skill && (
-                                        <span key={i} className={`px-2 py-1 text-xs font-bold rounded ${templateId === 'modern' ? 'bg-zinc-100 text-zinc-700' : ''} ${templateId === 'classic' ? 'border border-zinc-200 text-zinc-800 rounded-none' : ''} ${templateId === 'minimal' ? 'text-zinc-500 font-light p-0 pr-3 after:content-[","] last:after:content-[""]' : ''}`}>
-                                            {skill}
-                                        </span>
-                                    ))}
-                                </div>
-                            </section>
-                        )}
-                    </div>
+                            {content.education && content.education.length > 0 && (
+                                <section>
+                                    <h2 className={`text-sm font-bold uppercase tracking-widest mb-4 ${templateId === 'modern' ? 'text-indigo-600' : 'text-zinc-400'} ${templateId === 'classic' ? 'italic' : ''} ${templateId === 'minimal' ? 'not-italic font-medium text-zinc-300 mb-2 lowercase' : ''}`}>
+                                        Education
+                                    </h2>
+                                    <div className="space-y-4">
+                                        {content.education.map((edu, i) => (
+                                            <div key={i} className="flex justify-between items-baseline">
+                                                <div>
+                                                    <h3 className={`font-bold text-sm ${templateId === 'minimal' ? 'font-medium' : ''}`}>{edu.school}</h3>
+                                                    <p className={`text-sm text-zinc-600 font-medium ${templateId === 'minimal' ? 'text-xs font-light text-zinc-400' : ''}`}>{edu.degree}</p>
+                                                </div>
+                                                <span className={`text-sm text-zinc-500 whitespace-nowrap font-bold ${templateId === 'minimal' ? 'text-xs font-light' : ''} ${templateId === 'modern' ? 'text-indigo-600' : ''}`}>{edu.year}</span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </section>
+                            )}
+
+                            {content.skills && content.skills.length > 0 && (
+                                <section>
+                                    <h2 className={`text-sm font-bold uppercase tracking-widest mb-4 ${templateId === 'modern' ? 'text-indigo-600' : 'text-zinc-400'} ${templateId === 'classic' ? 'italic' : ''} ${templateId === 'minimal' ? 'not-italic font-medium text-zinc-300 mb-2 lowercase' : ''}`}>
+                                        Skills
+                                    </h2>
+                                    <div className={`flex flex-wrap gap-2 ${templateId === 'classic' ? 'justify-center' : ''}`}>
+                                        {content.skills.map((skill, i) => skill && (
+                                            <span key={i} className={`px-2 py-1 text-xs font-bold rounded ${templateId === 'modern' ? 'bg-indigo-50 text-indigo-700' : ''} ${templateId === 'classic' ? 'border border-zinc-200 text-zinc-800 rounded-none' : ''} ${templateId === 'minimal' ? 'text-zinc-500 font-light p-0 pr-3 after:content-[","] last:after:content-[""]' : ''}`}>
+                                                {skill}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </section>
+                            )}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

@@ -1,1 +1,1 @@
-{"/_not-found/page":"/_not-found","/api/generate/route":"/api/generate","/auth/callback/route":"/auth/callback","/dashboard/page":"/dashboard","/login/page":"/login","/editor/[id]/page":"/editor/[id]","/page":"/"}
+{"/auth/callback/route":"/auth/callback","/api/generate/route":"/api/generate","/_not-found/page":"/_not-found","/login/page":"/login","/editor/[id]/page":"/editor/[id]","/page":"/","/dashboard/page":"/dashboard"}
