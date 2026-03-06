@@ -4,30 +4,30 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "tailwindcss -i ./src/app/globals.css -o ./public/styles.css && next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
-    "next": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "lucide-react": "^0.446.0",
-    "clsx": "^2.1.1",
-    "tailwind-merge": "^2.5.2",
-    "@supabase/supabase-js": "^2.45.4",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/supabase-js": "^2.45.4",
+    "clsx": "^2.1.1",
+    "framer-motion": "^11.5.4",
+    "lucide-react": "^0.446.0",
+    "next": "15.1.7",
     "openai": "^4.63.0",
-    "framer-motion": "^11.5.4"
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "tailwind-merge": "^2.5.2"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "eslint": "^9.39.3",
+    "eslint-config-next": "^15.1.7",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
-    "eslint": "^9",
-    "eslint-config-next": "15.1.7"
+    "typescript": "^5"
   }
 }
