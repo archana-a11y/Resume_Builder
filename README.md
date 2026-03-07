@@ -60,5 +60,5 @@ This project is optimized for deployment on **Vercel**.
 2. Add the environment variables listed above in the Vercel dashboard.
 3. Vercel will automatically build and deploy the project.
 
-> [!IMPORTANT]
-> The build script is specifically configured to handle space-containing paths and static CSS generation for maximum compatibility.
+> [!TIP]
+> This project is fully compatible with standard Vercel deployments. Just connect and deploy!
