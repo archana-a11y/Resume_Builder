@@ -15,7 +15,12 @@
 
 @layer base {
   body {
-    @apply bg-black text-white selection:bg-purple-500/30;
+    @apply bg-black text-white;
+  }
+
+  /* Selection styles moved out of @apply body for better compatibility */
+  ::selection {
+    @apply bg-purple-500/30;
   }
 }
 
@@ -47,7 +52,11 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-zinc-800 rounded-full hover:bg-zinc-700 transition-colors;
+  @apply bg-zinc-800 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-zinc-700 transition-colors;
 }
 
 @media print {

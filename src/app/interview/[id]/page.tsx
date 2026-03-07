@@ -10,7 +10,6 @@ import {
     MessageSquare,
     Target,
     Zap,
-    CheckCircle2,
     Trophy,
     Lightbulb,
     ArrowRight
@@ -27,32 +26,31 @@ export default function InterviewPrepPage() {
     const [activeQuestion, setActiveQuestion] = useState(0);
 
     useEffect(() => {
-        fetchData();
-    }, [id]);
+        const fetchData = async () => {
+            const { data, error } = await supabase
+                .from("applications")
+                .select("*, resumes(*)")
+                .eq("id", id)
+                .single();
 
-    const fetchData = async () => {
-        const { data, error } = await supabase
-            .from("applications")
-            .select("*, resumes(*)")
-            .eq("id", id)
-            .single();
-
-        if (error) {
-            router.push("/dashboard");
-            return;
-        }
-
-        setApplication(data);
-        if (data.notes) {
-            try {
-                const savedPrep = JSON.parse(data.notes);
-                if (savedPrep.questions) setPrepData(savedPrep);
-            } catch (e) {
-                // Not valid JSON prep data, just normal notes
+            if (error) {
+                router.push("/dashboard");
+                return;
             }
-        }
-        setLoading(false);
-    };
+
+            setApplication(data);
+            if (data.notes) {
+                try {
+                    const savedPrep = JSON.parse(data.notes);
+                    if (savedPrep.questions) setPrepData(savedPrep);
+                } catch {
+                    // Not valid JSON prep data, just normal notes
+                }
+            }
+            setLoading(false);
+        };
+        fetchData();
+    }, [id, router]);
 
     const generatePrep = async () => {
         setGenerating(true);
@@ -159,13 +157,13 @@ export default function InterviewPrepPage() {
                                     key={idx}
                                     onClick={() => setActiveQuestion(idx)}
                                     className={`w-full text-left p-6 rounded-[32px] border transition-all space-y-2 group ${activeQuestion === idx
-                                            ? 'bg-white/10 border-white/20 shadow-xl'
-                                            : 'bg-white/[0.02] border-white/5 hover:border-white/10'
+                                        ? 'bg-white/10 border-white/20 shadow-xl'
+                                        : 'bg-white/[0.02] border-white/5 hover:border-white/10'
                                         }`}
                                 >
                                     <div className="flex items-center justify-between">
                                         <span className={`text-[10px] font-black uppercase tracking-widest ${q.type === 'Technical' ? 'text-blue-400' :
-                                                q.type === 'Behavioral' ? 'text-purple-400' : 'text-amber-400'
+                                            q.type === 'Behavioral' ? 'text-purple-400' : 'text-amber-400'
                                             }`}>
                                             {q.type}
                                         </span>

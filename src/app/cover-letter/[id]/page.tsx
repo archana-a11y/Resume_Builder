@@ -6,7 +6,6 @@ import { supabase } from "@/lib/supabase";
 import {
     ChevronLeft,
     Loader2,
-    Save,
     Download,
     Sparkles,
     FileText,

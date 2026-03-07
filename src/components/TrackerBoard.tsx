@@ -5,7 +5,6 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import {
     Plus,
-    MoreVertical,
     Trash2,
     ExternalLink,
     MessageSquare,
@@ -13,7 +12,6 @@ import {
     CheckCircle2,
     XCircle,
     Building2,
-    Briefcase,
     Sparkles
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -28,7 +26,6 @@ const COLUMNS = [
 
 export default function TrackerBoard() {
     const [applications, setApplications] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
     const [showAddModal, setShowAddModal] = useState(false);
     const [newItem, setNewItem] = useState({ company_name: "", role_title: "", status: "Wishlist" });
 
@@ -45,7 +42,6 @@ export default function TrackerBoard() {
         if (!error) {
             setApplications(data || []);
         }
-        setLoading(false);
     };
 
     const handleAdd = async () => {

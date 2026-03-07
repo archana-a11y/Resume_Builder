@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Sparkles, FileText, Layout, Shield, Zap } from "lucide-react";
+import { ArrowRight, Sparkles, Layout, Shield, Zap } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function Home() {
