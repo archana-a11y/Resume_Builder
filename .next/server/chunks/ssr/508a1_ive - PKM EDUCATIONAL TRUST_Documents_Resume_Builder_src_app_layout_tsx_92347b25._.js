@@ -1,3 +1,0 @@
-module.exports=[98618,a=>{"use strict";var b=a.i(74694);function c({children:a}){return(0,b.jsx)("html",{lang:"en",children:(0,b.jsx)("body",{className:"font-sans",children:a})})}a.s(["default",()=>c,"metadata",0,{title:"AI Resume Builder",description:"Build a premium, AI-powered resume in minutes."}])}];
-
-//# sourceMappingURL=508a1_ive%20-%20PKM%20EDUCATIONAL%20TRUST_Documents_Resume_Builder_src_app_layout_tsx_92347b25._.js.map
