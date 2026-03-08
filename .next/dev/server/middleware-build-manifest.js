@@ -1,0 +1,51 @@
+globalThis.__BUILD_MANIFEST = {
+  "pages": {
+    "/_app": [
+      "static/chunks/98737_next_dist_compiled_d1929e48._.js",
+      "static/chunks/98737_next_dist_shared_lib_5ca5722e._.js",
+      "static/chunks/98737_next_dist_client_3a9dcba1._.js",
+      "static/chunks/98737_next_dist_e9a758e9._.js",
+      "static/chunks/98737_next_app_6a5e6a8e.js",
+      "static/chunks/[next]_entry_page-loader_ts_a558f93a._.js",
+      "static/chunks/98737_react-dom_8fecb2d5._.js",
+      "static/chunks/98737_4e4ead84._.js",
+      "static/chunks/[root-of-the-server]__45507773._.js",
+      "static/chunks/OneDrive - PKM EDUCATIONAL TRUST_Documents_Resume_Builder_pages__app_2da965e7._.js",
+      "static/chunks/83a42_ck-OneDrive - PKM EDUCATIONAL TRUST_Documents_Resume_Builder_pages__app_07d8a6ee._.js"
+    ],
+    "/_error": [
+      "static/chunks/98737_next_dist_compiled_d1929e48._.js",
+      "static/chunks/98737_next_dist_shared_lib_4d75ec2f._.js",
+      "static/chunks/98737_next_dist_client_3a9dcba1._.js",
+      "static/chunks/98737_next_dist_323fb746._.js",
+      "static/chunks/98737_next_error_08521fe9.js",
+      "static/chunks/[next]_entry_page-loader_ts_8829f700._.js",
+      "static/chunks/98737_react-dom_8fecb2d5._.js",
+      "static/chunks/98737_4e4ead84._.js",
+      "static/chunks/[root-of-the-server]__77bc4ea2._.js",
+      "static/chunks/OneDrive - PKM EDUCATIONAL TRUST_Documents_Resume_Builder_pages__error_2da965e7._.js",
+      "static/chunks/33312_-OneDrive - PKM EDUCATIONAL TRUST_Documents_Resume_Builder_pages__error_c0ce0839._.js"
+    ]
+  },
+  "devFiles": [],
+  "polyfillFiles": [
+    "static/chunks/98737_next_dist_build_polyfills_polyfill-nomodule.js"
+  ],
+  "lowPriorityFiles": [],
+  "rootMainFiles": [
+    "static/chunks/[turbopack]_browser_dev_hmr-client_hmr-client_ts_7f8e6359._.js",
+    "static/chunks/98737_next_dist_compiled_react-dom_a8a27153._.js",
+    "static/chunks/98737_next_dist_compiled_react-server-dom-turbopack_22167357._.js",
+    "static/chunks/98737_next_dist_compiled_next-devtools_index_387bfac2.js",
+    "static/chunks/98737_next_dist_compiled_5e17c2df._.js",
+    "static/chunks/98737_next_dist_client_00e5b739._.js",
+    "static/chunks/98737_next_dist_4e314594._.js",
+    "static/chunks/98737_@swc_helpers_cjs_1c357a9f._.js",
+    "static/chunks/OneDrive - PKM EDUCATIONAL TRUST_Documents_Resume_Builder_a0ff3932._.js",
+    "static/chunks/turbopack-OneDrive - PKM EDUCATIONAL TRUST_Documents_Resume_Builder_3948a421._.js"
+  ]
+};
+globalThis.__BUILD_MANIFEST.lowPriorityFiles = [
+"/static/" + process.env.__NEXT_BUILD_ID + "/_buildManifest.js",
+"/static/" + process.env.__NEXT_BUILD_ID + "/_ssgManifest.js"
+];

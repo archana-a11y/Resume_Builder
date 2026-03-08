@@ -18,8 +18,8 @@
     "lucide-react": "^0.446.0",
     "next": "^16.1.6",
     "openai": "^4.63.0",
-    "react": "19.0.0",
-    "react-dom": "19.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
     "sharp": "^0.33.5",
     "tailwind-merge": "^2.5.2"
   },
@@ -32,5 +32,19 @@
     "postcss": "^8.5.8",
     "tailwindcss": "^3.4.19",
     "typescript": "^5"
-  }
+  },
+  "description": "A modern, AI-powered resume builder built with Next.js, Supabase, and OpenAI.",
+  "main": "next.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/archana-a11y/Resume_Builder.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/archana-a11y/Resume_Builder/issues"
+  },
+  "homepage": "https://github.com/archana-a11y/Resume_Builder#readme"
 }
