@@ -1,6 +1,8 @@
 module.exports = [
-"[project]/OneDrive - PKM EDUCATIONAL TRUST/Documents/Resume_Builder/.next-internal/server/app/page/actions.js [app-rsc] (server actions loader, ecmascript)", ((__turbopack_context__, module, exports) => {
+"[project]/OneDrive - PKM EDUCATIONAL TRUST/Documents/Resume_Builder/.next-internal/server/app/page/actions.js [app-rsc] (server actions loader, ecmascript)", ((__turbopack_context__) => {
+"use strict";
 
+__turbopack_context__.s([]);
 }),
 ];
 

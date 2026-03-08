@@ -37,7 +37,8 @@ const __TURBOPACK__default__export__ = (0, __TURBOPACK__imported__module__$5b$pr
     throw new Error("Attempted to call the default export of [project]/OneDrive - PKM EDUCATIONAL TRUST/Documents/Resume_Builder/src/app/page.tsx from the server, but it's on the client. It's not possible to invoke a client function from the server, it can only be rendered as a Component or passed to props of a Client Component.");
 }, "[project]/OneDrive - PKM EDUCATIONAL TRUST/Documents/Resume_Builder/src/app/page.tsx", "default");
 }),
-"[project]/OneDrive - PKM EDUCATIONAL TRUST/Documents/Resume_Builder/src/app/page.tsx [app-rsc] (ecmascript)", ((__turbopack_context__, module, exports) => {
+"[project]/OneDrive - PKM EDUCATIONAL TRUST/Documents/Resume_Builder/src/app/page.tsx [app-rsc] (ecmascript)", ((__turbopack_context__) => {
+"use strict";
 
 var __TURBOPACK__imported__module__$5b$project$5d2f$OneDrive__$2d$__PKM__EDUCATIONAL__TRUST$2f$Documents$2f$Resume_Builder$2f$src$2f$app$2f$page$2e$tsx__$5b$app$2d$rsc$5d$__$28$client__reference__proxy$29$__$3c$module__evaluation$3e$__ = __turbopack_context__.i("[project]/OneDrive - PKM EDUCATIONAL TRUST/Documents/Resume_Builder/src/app/page.tsx [app-rsc] (client reference proxy) <module evaluation>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$OneDrive__$2d$__PKM__EDUCATIONAL__TRUST$2f$Documents$2f$Resume_Builder$2f$src$2f$app$2f$page$2e$tsx__$5b$app$2d$rsc$5d$__$28$client__reference__proxy$29$__ = __turbopack_context__.i("[project]/OneDrive - PKM EDUCATIONAL TRUST/Documents/Resume_Builder/src/app/page.tsx [app-rsc] (client reference proxy)");
